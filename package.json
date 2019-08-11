@@ -1,0 +1,23 @@
+{
+  "name": "food-delivery-server-goit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DelusiveMedicine/food-delivery-server-goit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DelusiveMedicine/food-delivery-server-goit/issues"
+  },
+  "homepage": "https://github.com/DelusiveMedicine/food-delivery-server-goit#readme",
+  "dependencies": {
+    "morgan": "^1.9.1"
+  }
+}
