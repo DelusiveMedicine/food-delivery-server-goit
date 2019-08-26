@@ -1,10 +1,11 @@
 const main = require('./main/main')
-const products = require('../db/products/products');
+const productsRouting = require('../db/products/productsRouting');
 const signUp = require('../db/users/createUser');
 
 const router = {
   '/signup': signUp,
-  '/products': products,
+  '/products': productsRouting,
+  '/products/': productsRouting,
   default: main
 };
 
