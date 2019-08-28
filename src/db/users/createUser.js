@@ -24,6 +24,10 @@ const signUp = (request, response) => {
       response.write(createdUser);
       response.end();
     });
+  } else {
+    response.writeHead(404);
+    response.write('Page Not Found');
+    response.end();
   }
 };
 
