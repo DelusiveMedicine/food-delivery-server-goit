@@ -1,34 +1,50 @@
 const fs = require("fs");
+const path = require("path");
+const { Router } = require('express');
+const router = Router();
+const allUsersFile = require('./all-users');
 
-const signUp = (request, response) => {
-  if (request.method === "POST") {
-    let body = "";
-
-    request.on("data", function(data) {
-      body = body + data;
-    });
-    
-    request.on("end", function() {
-      const userData = JSON.parse(body);
-      const userName = userData.username;
-      const userFile = userName + ".json";
-      fs.writeFile(__dirname + "/" + userFile, body, function(err) {
-        if (err) throw err;
-      });
-
-      const createdUser = JSON.stringify({ status: "success", user: userData });
-    
-      response.writeHead(200, {
-        "Content-Type": "application/json"
-      });
-      response.write(createdUser);
-      response.end();
-    });
+router.param('id', (req, res, next, id) => {
+  let userDataResponse;
+  const searchedUser = allUsersFile.find(user => {
+    if (user.id == id) return user;
+  });
+  if (searchedUser) {
+    userDataResponse = {
+      "status": "success",
+      "user": searchedUser
+    }
   } else {
-    response.writeHead(404);
-    response.write('Page Not Found');
-    response.end();
+    userDataResponse = {
+      "status": "not found"
+    }
   }
-};
 
-module.exports = signUp;
+  res.send(userDataResponse)
+});
+
+router.get('/users/:id', (req, res) => {
+  console.log('Loading user info')
+});
+
+router.post('/users' || '/users/', (req, res) => {
+  const userData = req.body;
+  const filePath = path.join(__dirname, "all-users.json");
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    const allUsers = JSON.parse(data);
+    let i = allUsers.length + 1;
+    userData.id = i;
+    allUsers.push(userData);
+
+    fs.writeFileSync(filePath, JSON.stringify(allUsers), 'utf8', err => console.log(err));
+
+    const createdUser = JSON.stringify({
+      status: "success",
+      user: userData
+    });
+    res.send(createdUser);
+    if (err) throw err;
+  });
+});
+
+module.exports = router;

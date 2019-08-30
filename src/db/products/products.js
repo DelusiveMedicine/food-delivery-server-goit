@@ -1,16 +1,45 @@
 const fs = require("fs");
 const path = require("path");
+const {Router} = require('express');
+const router = Router();
+const allProducts = require("./all-products");
 
-const products = (request, response) => {
-    const filePath = path.join(__dirname, "all-products.json");
+router.param('id', (req, res, next, id) => {
+  let productsListResponse;
+  const arrayOfQueries = id.trim().split(",");
+  const searchedProducts = arrayOfQueries.filter(item => {
+    for (product of allProducts) {
+      if (item == product.id) {
+        return product;
+      }
+    }
+  });
 
-    response.writeHead(200, {
-      "Content-Type": "application/json"
-    });
+  if (searchedProducts.length) {
+    productsListResponse = {
+      "status": "success",
+      "products": searchedProducts,
+    }
+  } else {
+    productsListResponse = {
+      "status": "no products",
+      "products": [],
+    }
+  }
 
-    const readStream = fs.createReadStream(filePath);
+  res.status(200).send(productsListResponse);
+  next();
+});
 
-    readStream.pipe(response);
-};
+router.get('/products/:id', (req, res) => {
+  res.end();
+});
 
-module.exports = products;
+router.get('/products' || '/products/', (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  const filePath = path.join(__dirname, "all-products.json");
+  const readStream = fs.createReadStream(filePath);
+  readStream.pipe(res).status(200);
+});
+
+module.exports = router;
