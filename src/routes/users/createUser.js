@@ -1,9 +1,11 @@
 const fs = require("fs");
+const path = require("path");
 
 const signUp = (request, response) => {
+  
   if (request.method === "POST") {
     let body = "";
-
+    
     request.on("data", function(data) {
       body = body + data;
     });
@@ -12,7 +14,8 @@ const signUp = (request, response) => {
       const userData = JSON.parse(body);
       const userName = userData.username;
       const userFile = userName + ".json";
-      fs.writeFile(__dirname + "/" + userFile, body, function(err) {
+      const filePath = path.join("src", "db", "users");
+      fs.writeFile(filePath + "/" + userFile, body, function(err) {
         if (err) throw err;
       });
 

@@ -1,4 +1,4 @@
-const https = require('https');
+const http = require('http');
 const url = require('url');
 const fs = require('fs');
 
@@ -18,10 +18,10 @@ const handleRouting = require('./routes/handleRouting')
 
 const startServer = port => {
 
-  const server = https.createServer(httpOptions, (request, response) => {
+  const server = http.createServer((request, response) => {
 
     const parsedUrl = url.parse(request.url);
-
+    
     const func = handleRouting(router, parsedUrl.pathname) || router.default;
     logger(request, response, () => func(request, response));
   });

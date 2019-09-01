@@ -1,4 +1,4 @@
-const allProducts = require("./all-products");
+const allProducts = require("../../db/products/all-products");
 const products = require("./products");
 
 const productsRouting = (request, response) => {
